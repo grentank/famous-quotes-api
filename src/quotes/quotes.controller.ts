@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import wait from 'src/utils/wait';
-import { CreateQuoteDto } from './dto/create-quote.dto';
+import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common';
+import { CreateQuoteDto, CreateQuoteSchema } from './dto/create-quote.dto';
 import { QuotesService } from './quotes.service';
+import { ZodValidationPipe } from 'src/utils/pipes/zodValidationPipe';
 
 @Controller('quotes')
 export class QuotesController {
@@ -23,6 +23,7 @@ export class QuotesController {
   }
 
   @Post()
+  @UsePipes(new ZodValidationPipe(CreateQuoteSchema))
   async create(@Body() createQuoteDto: CreateQuoteDto) {
     console.log(createQuoteDto);
     return this.qoutesService.create(createQuoteDto);
